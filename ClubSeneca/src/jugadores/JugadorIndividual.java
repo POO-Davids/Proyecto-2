@@ -1,0 +1,91 @@
+package jugadores;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import estadisticas.Estadistica;
+import usuarios.Usuario;
+
+public class JugadorIndividual extends Jugador {
+
+	public static final List<String> NIVELES = List.of("Principiante", "Intermedio", "Avanzado");
+
+	private String nivel;
+	private String disciplina;
+	private float elo;
+	private List<Float> historialElo;
+
+	public JugadorIndividual(String idJugador, Usuario usuario, String disciplina, String nivel, float elo) {
+		super(idJugador, usuario);
+		this.disciplina = disciplina;
+		this.nivel = nivel;
+		this.elo = elo;
+		this.historialElo = new ArrayList<>(List.of(elo));
+		this.estadisticaAcumulada = Estadistica.crear(disciplina, idJugador);
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public String getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(String disciplina) {
+		this.disciplina = disciplina;
+	}
+
+	public float getElo() {
+		return elo;
+	}
+
+	public void setElo(float elo) {
+		this.elo = elo;
+		historialElo.add(elo);
+	}
+
+	public List<Float> getHistorialElo() {
+		return new ArrayList<>(historialElo);
+	}
+
+	public void setHistorialElo(List<Float> historialElo) {
+		this.historialElo = new ArrayList<>(historialElo);
+	}
+
+	@Override
+	public String getDeporte() {
+		return disciplina;
+	}
+
+	public Boolean esNivelCompatible(JugadorIndividual otro) {
+
+		if (otro == null || nivel == null || disciplina == null
+				|| otro.getNivel() == null
+				|| otro.getDisciplina() == null) {
+			return false;
+		}
+
+		if (!disciplina.equalsIgnoreCase(otro.getDisciplina())) {
+			return false;
+		}
+
+		int nivel1 = NIVELES.indexOf(nivel);
+		int nivel2 = NIVELES.indexOf(otro.getNivel());
+
+		if (nivel1 == -1 || nivel2 == -1) {
+			return false;
+		}
+
+		if (Boolean.TRUE.equals(esEntrenador)
+				|| Boolean.TRUE.equals(otro.getEsEntrenador())) {
+			return true;
+		}
+
+		return Math.abs(nivel1 - nivel2) <= 1;
+	}
+}
