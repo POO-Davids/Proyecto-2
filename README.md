@@ -1,2 +1,2 @@
 
-[Ver documentación completa](Entrega única/README.md)
+[Ver documentación completa](./Entrega%20%C3%BAnica/README.md)
